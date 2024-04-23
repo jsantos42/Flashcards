@@ -1,0 +1,63 @@
+services:
+  frontend:
+    build: ./frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+      - API_URL=http://backend:${BACKEND_PORT}
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    networks:
+      - container-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+    command: npm run dev
+
+
+  backend:
+    build: ./backend
+    # Set the working directory for runtime (for `command`)
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    environment:
+      - PORT=${BACKEND_PORT}
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    networks:
+      - container-network
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    command: npm run dev
+
+
+  db:
+    image: mysql:8.3
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    networks:
+      - container-network
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    restart: unless-stopped
+    healthcheck:
+      test: mysqladmin ping -u ${MYSQL_USER} --password=${MYSQL_PASSWORD}
+      interval: 5s
+      timeout: 3s
+      retries: 5
+#    expose:
+#      - ${DB_PORT}
+
+networks:
+  container-network:
+    driver: bridge
