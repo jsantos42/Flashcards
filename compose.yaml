@@ -1,9 +1,15 @@
 services:
   frontend:
     build: ./frontend
+    # Set the working directory for runtime (for `command`)
     working_dir: /app
+    # Mount the project directory from the host to the container, allowing for
+    # live reloads of the application code during development. Also, anonymously
+    # mount the node_modules directory to persist dependencies across container
+    # restarts and avoid the need for local installation of packages.
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     environment:
       - NEXT_TELEMETRY_DISABLED=1
       - API_URL=http://backend:${BACKEND_PORT}
@@ -19,10 +25,10 @@ services:
 
   backend:
     build: ./backend
-    # Set the working directory for runtime (for `command`)
     working_dir: /app
     volumes:
       - ./backend:/app
+      - /app/node_modules
     environment:
       - PORT=${BACKEND_PORT}
       - MYSQL_DATABASE
