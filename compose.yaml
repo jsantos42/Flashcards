@@ -34,6 +34,10 @@ services:
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - DATABASE_URL
+      - SHADOW_DATABASE_URL
+      # Disable Prisma telemetry
+      - CHECKPOINT_DISABLE=1
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     networks:
@@ -42,7 +46,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: npm run dev
+    # Generate the Prisma Client before starting the backend
+    command: >
+      sh -c "npx prisma generate && npm run dev"
 
 
   db:
@@ -51,18 +57,46 @@ services:
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
     networks:
       - container-network
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${MYSQL_PORT}:${MYSQL_PORT}
     restart: unless-stopped
     healthcheck:
       test: mysqladmin ping -u ${MYSQL_USER} --password=${MYSQL_PASSWORD}
       interval: 5s
       timeout: 3s
       retries: 5
-#    expose:
-#      - ${DB_PORT}
+    depends_on:
+      shadow-db:
+        condition: service_healthy
+
+
+  # Prisma ORM needs a second, temporary database that is created and deleted
+  # automatically each time you run prisma migrate dev. Either you add extra
+  # privileges to the main database user or you create a separate shadow db
+  # cf https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/shadow-database
+  shadow-db:
+    image: mysql:8.3
+    environment:
+      - MYSQL_DATABASE=${SHADOW_DATABASE}
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+    networks:
+      - container-network
+    ports:
+      # Expose the container default MySQL port to the host's chosen port for
+      # connecting to the shadow db
+      - ${SHADOW_DB_PORT}:${MYSQL_PORT}
+    restart: unless-stopped
+    healthcheck:
+      test: mysqladmin ping -u ${MYSQL_USER} --password=${MYSQL_PASSWORD}
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
 
 networks:
   container-network:

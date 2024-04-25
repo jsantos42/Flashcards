@@ -5,6 +5,7 @@ import morgan from "morgan";
 import router from "./routes/api";
 import dotenv from "dotenv";
 import {env} from "process";
+import {PrismaClient} from "@prisma/client";
 
 // Load environment variables from a .env file into process.env
 dotenv.config();
@@ -60,10 +61,20 @@ app.use(function (err: HttpError, req: Request, res: Response, next: NextFunctio
 
 
 //==============================================================================
-// START THE SERVER
+// CONNECT TO THE DATABASE & START THE SERVER
 //==============================================================================
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+export const prisma = new PrismaClient();
+
+(async () => {
+    try {
+        await prisma.$connect();
+        console.log('Connected to the database');
+        app.listen(port, () => {
+            console.log(`Server running at http://localhost:${port}`);
+        });
+    } catch (error) {
+        console.error('Error connecting to the database:', error);
+    }
+})();
 
 export default app;
