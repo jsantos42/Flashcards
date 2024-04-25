@@ -48,7 +48,9 @@ services:
         condition: service_healthy
     # Generate the Prisma Client before starting the backend
     command: >
-      sh -c "npx prisma generate && npm run dev"
+      sh -c "npx prisma generate
+      && npx prisma migrate deploy
+      && npm run dev"
 
 
   db:

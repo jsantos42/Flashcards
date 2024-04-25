@@ -7,3 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
+
+model Deck {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(255)
+  description String      @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Flashcards  Flashcard[]
+}
+
+model Flashcard {
+  id         Int      @id @default(autoincrement())
+  question   String   @db.VarChar(255)
+  answer     String   @db.VarChar(255)
+  remembered Boolean  @default(false)
+  deckId     Int
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  deck       Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+}
