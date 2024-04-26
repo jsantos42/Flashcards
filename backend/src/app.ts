@@ -65,16 +65,18 @@ app.use(function (err: HttpError, req: Request, res: Response, next: NextFunctio
 //==============================================================================
 export const prisma = new PrismaClient();
 
-(async () => {
-    try {
-        await prisma.$connect();
-        console.log('Connected to the database');
-        app.listen(port, () => {
-            console.log(`Server running at http://localhost:${port}`);
-        });
-    } catch (error) {
-        console.error('Error connecting to the database:', error);
-    }
-})();
+if (env.NODE_ENV !== 'test') {
+    (async () => {
+        try {
+            await prisma.$connect();
+            console.log('Connected to the database');
+            app.listen(port, () => {
+                console.log(`Server running at http://localhost:${port}`);
+            });
+        } catch (error) {
+            console.error('Error connecting to the database:', error);
+        }
+    })();
+}
 
 export default app;
