@@ -16,7 +16,10 @@
           "tsconfig": "tsconfig.json"
         }
       ]
-    }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/tests/jest.setup.ts"
+    ]
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma"
