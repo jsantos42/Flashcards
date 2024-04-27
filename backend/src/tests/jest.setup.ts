@@ -6,9 +6,19 @@ jest.mock('../app', () => ({
 			create: jest.fn(),
 			findUnique: jest.fn(),
 			findMany: jest.fn(),
+		},
+		flashcard: {
+			create: jest.fn(),
+			findUnique: jest.fn(),
+			findMany: jest.fn(),
+			update: jest.fn(),
 		}
 	}
 }));
+
+beforeEach(() => {
+	jest.clearAllMocks();
+});
 
 // Suppress console.error output in tests
 jest.spyOn(console, 'error').mockImplementation(() => {});
