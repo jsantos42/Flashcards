@@ -25,3 +25,12 @@ When you're done, you can stop the server with `Ctrl+C` or by running:
 ```bash
 docker compose down
 ```
+
+## Test
+With the containers running, open a new terminal and run:
+```bash
+docker compose exec backend npm run test -- --verbose
+```
+
+### TBD
+- Integration tests on the backend
