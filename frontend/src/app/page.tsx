@@ -1,7 +1,8 @@
 "use client"
 import React, {useEffect, useRef, useState} from "react";
 import {Deck} from "@/types";
-import Link from "next/link";
+import {DeckGrid} from "@/app/components/DeckGrid";
+import {AddDeckForm} from "@/app/components/AddDeckForm";
 
 export default function FlashcardDashboard() {
 	const [decks, setDecks] = useState([] as Deck[]);
@@ -56,43 +57,11 @@ export default function FlashcardDashboard() {
 			<h1 className="mb-20 text-3xl lg:text-4xl text-center font-bold">
 				Flashcard Dashboard
 			</h1>
-			<div className='w-full grid grid-cols-desktop gap-4 justify-items-center'>
-				{decks.map(deck => (
-					<Link href={`/decks/${deck.id}`} key={deck.id}>
-						<div className="w-[180px] bg-white shadow-md p-4 rounded-lg text-black">
-							<h2 className="text-xl font-bold text-center">{deck.name}</h2>
-							<p>{deck.description}</p>
-						</div>
-					</Link>
-				))}
-			</div>
-			{isAddingDeck && (
-				<div className="mt-8 items-center bg-gray-300 rounded-lg p-4"
-					 ref={addDeckForm}
-				>
-					<form onSubmit={addDeck} className="flex flex-col gap-4">
-						<input type="text"
-							   name="name"
-							   placeholder="Deck name"
-							   required
-							   className="border border-gray-400 px-4 py-2 rounded-lg"
-						/>
-						<input type="text"
-							   name="description"
-							   placeholder="Deck description"
-							   className="border border-gray-400 px-4 py-2 rounded-lg"
-							   required
-						/>
-						<button type="submit"
-								className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-						>
-							Add Deck
-						</button>
-					</form>
-				</div>
-			)}
-			<button onClick={() => setIsAddingDeck((prevState) => !prevState)}
-					className={`text-white px-4 py-2 rounded-lg mt-4 bg-${isAddingDeck ? 'red' : 'blue'}-500`}
+			<DeckGrid {...{decks}} />
+			{isAddingDeck && <AddDeckForm ref={addDeckForm} onSubmit={addDeck} />}
+			<button
+				onClick={() => setIsAddingDeck((prevState) => !prevState)}
+				className={`text-white px-4 py-2 rounded-lg mt-4 bg-${isAddingDeck ? 'red' : 'blue'}-500`}
 			>
 				{isAddingDeck ? 'Cancel' : 'Add New Deck'}
 			</button>
