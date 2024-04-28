@@ -28,7 +28,7 @@ export const addDeck = async (req: Request, res: Response) => {
 	}
 }
 
-export const showSelectedDeck = async (req: Request, res: Response) => {
+export const showSelectedDeckFlashcards = async (req: Request, res: Response) => {
 	const {deckId} = req.params;
 	try {
 		const deck = await prisma.deck.findUnique({
@@ -40,7 +40,13 @@ export const showSelectedDeck = async (req: Request, res: Response) => {
 		if (!deck) {
 			return res.status(404).json({error: 'Deck not found'});
 		}
-		res.json(deck);
+
+		const flashcards = await prisma.flashcard.findMany({
+			where: {
+				deckId: Number(deckId)
+			}
+		});
+		res.json(flashcards);
 	} catch (error) {
 		console.error('Error fetching deck:', error);
 		res.status(500).json({error: 'Internal server error'});

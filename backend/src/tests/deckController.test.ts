@@ -1,7 +1,7 @@
 import {Request} from "express";
 import {prisma} from "../app";
-import {mockDecks, res} from "./jest.setup";
-import {addDeck, showAllDecks, showSelectedDeck} from "../controllers/deckController";
+import {mockDecks, mockFlashcards, res} from "./jest.setup";
+import {addDeck, showAllDecks, showSelectedDeckFlashcards} from "../controllers/deckController";
 
 describe('Deck Controllers', () => {
 	describe('showAllDecks', () => {
@@ -47,21 +47,22 @@ describe('Deck Controllers', () => {
 		});
 	});
 
-	describe('showSelectedDeck', () => {
-		it('should return a single deck', async () => {
-			const req = {params: {}} as Request;
-			const fetchedDeckId = 2;
+	describe('showSelectedDeckFlashcards', () => {
+		it('should return the flashcards of a deck', async () => {
+			const req = {params: {deckId: '1'}} as unknown as Request;
+			const fetchedDeckId = 1;
 
 			(prisma.deck.findUnique as jest.Mock).mockResolvedValue(mockDecks[fetchedDeckId]);
-			await showSelectedDeck(req, res);
-			expect(res.json).toHaveBeenCalledWith(mockDecks[fetchedDeckId]);
+			(prisma.flashcard.findMany as jest.Mock).mockResolvedValue(mockFlashcards[fetchedDeckId]);
+			await showSelectedDeckFlashcards(req, res);
+			expect(res.json).toHaveBeenCalledWith(mockFlashcards[fetchedDeckId]);
 		});
 
-		it('should not return a deck that does not exist', async () => {
+		it('should not return flashcards of a deck that does not exist', async () => {
 			const req = {params: {}} as Request;
 
 			(prisma.deck.findUnique as jest.Mock).mockResolvedValue(null);
-			await showSelectedDeck(req, res);
+			await showSelectedDeckFlashcards(req, res);
 			expect(res.status).toHaveBeenCalledWith(404);
 			expect(res.json).toHaveBeenCalledWith({error: 'Deck not found'});
 		});
@@ -71,7 +72,7 @@ describe('Deck Controllers', () => {
 			const error = new Error('Error message');
 
 			(prisma.deck.findUnique as jest.Mock).mockRejectedValue(error);
-			await showSelectedDeck(req, res);
+			await showSelectedDeckFlashcards(req, res);
 			expect(console.error).toHaveBeenCalledWith('Error fetching deck:', error)
 			expect(res.status).toHaveBeenCalledWith(500);
 			expect(res.json).toHaveBeenCalledWith({error: 'Internal server error'});
