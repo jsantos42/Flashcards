@@ -33,4 +33,15 @@ docker compose exec backend npm run test -- --verbose
 ```
 
 ### TBD
-- Integration tests on the backend
+#### Backend:
+- Integration tests
+- Add algorithm to shuffle cards
+
+#### Frontend:
+- Unit and integration tests
+- Notify user of errors (right now it's just console.error)
+- Improve code readability by splitting into smaller reusable components
+- Setup prettier, check config eslint and add husky
+- Add a loading spinner when fetching data
+- Add dark mode compatibility
+- Improve overall UI/UX
