@@ -6,10 +6,10 @@ const router = Router();
 
 router.get('/', showAllDecks);
 router.post('/add-deck', addDeck);
-router.get('/deck:deckId', showSelectedDeck);
-router.get('/deck:deckId/flashcard:flashcardId', showSelectedFlashcard);
-router.post('/deck:deckId/add-flashcard', addFlashcard);
-router.post('/deck:deckId/flashcard:flashcardId/remember', toggleRememberFlashcard);
+router.get('/decks/:deckId', showSelectedDeck);
+router.get('/decks/:deckId/flashcards/:flashcardId', showSelectedFlashcard);
+router.post('/decks/:deckId/add-flashcard', addFlashcard);
+router.post('/decks/:deckId/flashcards/:flashcardId/remember', toggleRememberFlashcard);
 
 
 export default router;
