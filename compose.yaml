@@ -12,7 +12,7 @@ services:
       - /app/node_modules
     environment:
       - NEXT_TELEMETRY_DISABLED=1
-      - API_URL=http://backend:${BACKEND_PORT}
+      - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT}
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     networks:

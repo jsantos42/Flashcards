@@ -12,7 +12,7 @@ export default function FlashcardDashboard() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const response = await fetch('http://localhost:3000/');
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`);
 				const fetchedDecks = await response.json();
 				setDecks(fetchedDecks);
 			} catch (error) {
@@ -33,7 +33,7 @@ export default function FlashcardDashboard() {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
 		try {
-			const response = await fetch('http://localhost:3000/add-deck', {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add-deck`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
