@@ -2,7 +2,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Deck} from "@/types";
 import {DeckGrid} from "@/app/components/DeckGrid";
-import {AddDeckForm} from "@/app/components/AddDeckForm";
+import {AddingForm} from "@/app/components/AddingForm";
 
 export default function FlashcardDashboard() {
 	const [decks, setDecks] = useState([] as Deck[]);
@@ -58,7 +58,7 @@ export default function FlashcardDashboard() {
 				Flashcard Dashboard
 			</h1>
 			<DeckGrid {...{decks}} />
-			{isAddingDeck && <AddDeckForm ref={addDeckForm} onSubmit={addDeck} />}
+			{isAddingDeck && <AddingForm ref={addDeckForm} onSubmit={addDeck} elementType="Deck" />}
 			<button
 				onClick={() => setIsAddingDeck((prevState) => !prevState)}
 				className={`text-white px-4 py-2 rounded-lg mt-4 bg-${isAddingDeck ? 'red' : 'blue'}-500`}
