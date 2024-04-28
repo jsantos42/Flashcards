@@ -86,7 +86,9 @@ export default function SingleDeck({
 	}
 
 	const nextFlashcard = (remembered: boolean) => {
-		toggleRememberFlashcard();
+		if (remembered !== flashcards[currentFlashcardIndex].remembered) {
+			toggleRememberFlashcard();
+		}
 		setIsFlipped(false);
 		if (currentFlashcardIndex === flashcards.length - 1) {
 			setCurrentFlashcardIndex(0);
