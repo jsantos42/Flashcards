@@ -7,7 +7,7 @@ export const DeckGrid = ({decks}: {decks: Deck[]}) => {
 		<div className='w-full grid grid-cols-desktop gap-4 justify-items-center'>
 			{decks.map(deck => (
 				<Link href={`/decks/${deck.id}`} key={deck.id}>
-					<div className="w-[180px] bg-white shadow-md p-4 rounded-lg text-black">
+					<div className="w-[180px] bg-white shadow-md p-4 rounded-lg text-black flex flex-col items-center">
 						<h2 className="text-xl font-bold text-center">{deck.name}</h2>
 						<p>{deck.description}</p>
 					</div>

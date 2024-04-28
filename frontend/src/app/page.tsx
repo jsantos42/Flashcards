@@ -61,7 +61,7 @@ export default function FlashcardDashboard() {
 			{isAddingDeck && <AddingForm ref={addDeckForm} onSubmit={addDeck} elementType="Deck" />}
 			<button
 				onClick={() => setIsAddingDeck((prevState) => !prevState)}
-				className={`text-white px-4 py-2 rounded-lg mt-4 bg-${isAddingDeck ? 'red' : 'blue'}-500`}
+				className={`text-white px-4 py-2 rounded-lg mt-4 ${isAddingDeck ? 'bg-red-500' : 'bg-blue-500'}`}
 			>
 				{isAddingDeck ? 'Cancel' : 'Add New Deck'}
 			</button>
