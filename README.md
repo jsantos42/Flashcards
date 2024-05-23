@@ -1,5 +1,6 @@
 # Flashcards
 
+![Question](screenshots/1.png)
 Flashcard application that allows users to:
 
 - Create new decks
